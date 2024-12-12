@@ -11,12 +11,30 @@ export default class ProductRepository implements ProductRepositoryInterface {
     });
   }
   async update(entity: Product): Promise<void> {
-    throw new Error("Method not implemented.");
+    await ProductModel.update(
+      {
+        name: entity.name,
+        price: entity.price,
+      },
+      {
+        where: { id: entity.id },
+      }
+    );
   }
   async find(id: string): Promise<Product> {
-    throw new Error("Method not implemented.");
+    const productModel = await ProductModel.findOne({ where: { id } });
+
+    if (!productModel) {
+      throw new Error(`Product with id ${id} not found.`);
+    }
+
+    return new Product(productModel.id, productModel.name, productModel.price);
   }
   async findAll(): Promise<Product[]> {
-    throw new Error("Method not implemented.");
+    const productModels = await ProductModel.findAll();
+    return productModels.map(
+      (productModel) =>
+        new Product(productModel.id, productModel.name, productModel.price)
+    );
   }
 }
