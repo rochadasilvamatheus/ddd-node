@@ -1,9 +1,12 @@
-version: "3.8"
 services:
   node-app:
-    build: .
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    labels:
+      jest_runner: "true"
     ports:
       - "3000:3000"
     volumes:
       - .:/usr/src/app
-    command: tail -f /dev/null
+    command: "tail -f /dev/null"

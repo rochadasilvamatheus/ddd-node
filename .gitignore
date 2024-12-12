@@ -7,8 +7,14 @@ yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
 
-# # Node.js
+# Node.js
 node_modules/
+
+# Dev Container
+.devcontainer/
+
+# Jest Runner
+.vscode/
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json

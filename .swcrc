@@ -1,0 +1,12 @@
+{
+  "jsc": {
+    "parser": {
+      "syntax": "typescript", // Enables parsing TypeScript syntax.
+      "decorators": true // Enables support for decorators.
+    },
+    "transform": {
+      "legacyDecorator": true, // Enables legacy decorator support (aligns with TypeScript's experimental decorators).
+      "decoratorMetadata": true // Emits metadata for decorators (required for frameworks like NestJS).
+    }
+  }
+}
