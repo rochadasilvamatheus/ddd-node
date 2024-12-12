@@ -37,6 +37,27 @@ describe("Product repository test", () => {
     });
   });
 
+  it("should throw an error when database connection fails during product creation", async () => {
+    const productRepository = new ProductRepository();
+    const product = new Product("1", "Product 1", 100);
+
+    // Mock the database call to simulate a failure (database error)
+    jest
+      .spyOn(ProductModel, "create")
+      .mockRejectedValueOnce(new Error("Database connection failed"));
+
+    // Silence console.error to prevent unwanted logging during test execution
+    const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
+
+    // Expect the create method to reject with the appropriate error message
+    await expect(productRepository.create(product)).rejects.toThrow(
+      "Failed to create product: Database connection failed"
+    );
+
+    // Restore console.error after the test to avoid side effects
+    consoleErrorSpy.mockRestore();
+  });
+
   it("should update a product", async () => {
     const productRepository = new ProductRepository();
     const product = new Product("1", "Product 1", 100);

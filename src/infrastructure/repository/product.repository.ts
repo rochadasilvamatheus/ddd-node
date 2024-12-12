@@ -3,13 +3,37 @@ import ProductRepositoryInterface from "../../domain/repository/product-reposito
 import ProductModel from "../db/sequelize/model/product.model";
 
 export default class ProductRepository implements ProductRepositoryInterface {
-  async create(entity: Product): Promise<void> {
-    await ProductModel.create({
-      id: entity.id,
-      name: entity.name,
-      price: entity.price,
-    });
+  async create(entity: Product): Promise<Product> {
+    if (!entity.isValid()) {
+      throw new Error("Invalid product data");
+    }
+
+    try {
+      const createdProduct = await ProductModel.create({
+        id: entity.id,
+        name: entity.name,
+        price: entity.price,
+      });
+
+      return new Product(
+        createdProduct.id,
+        createdProduct.name,
+        createdProduct.price
+      );
+    } catch (error: unknown) {
+      // Log the original error for debugging
+      console.error("Error occurred while creating the product:", error);
+
+      if (error instanceof Error) {
+        // Throw an error with a clear message and include the original error's details
+        throw new Error(`Failed to create product: ${error.message}`);
+      } else {
+        // If the error is not an instance of Error, throw a generic error message
+        throw new Error("Failed to create product: Unknown error");
+      }
+    }
   }
+
   async update(entity: Product): Promise<void> {
     await ProductModel.update(
       {
@@ -21,6 +45,7 @@ export default class ProductRepository implements ProductRepositoryInterface {
       }
     );
   }
+
   async find(id: string): Promise<Product> {
     const productModel = await ProductModel.findOne({ where: { id } });
 
@@ -30,6 +55,7 @@ export default class ProductRepository implements ProductRepositoryInterface {
 
     return new Product(productModel.id, productModel.name, productModel.price);
   }
+
   async findAll(): Promise<Product[]> {
     const productModels = await ProductModel.findAll();
     return productModels.map(

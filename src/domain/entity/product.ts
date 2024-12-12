@@ -32,6 +32,10 @@ export default class Product {
     this.validate();
   }
 
+  isValid(): boolean {
+    return this._id.length > 0 && this._name.length > 0 && this._price >= 0;
+  }
+
   validate(): boolean {
     if (this._id.length === 0) {
       throw new Error("Id is required");
