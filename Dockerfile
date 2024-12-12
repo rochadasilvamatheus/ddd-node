@@ -10,6 +10,12 @@ COPY package*.json ./
 # Install the Node.js dependencies
 RUN npm install
 
+# Alterar as permissões do diretório .npm para o usuário 'node'
+RUN chown -R node:node /root/.npm /usr/src/app
+
+# Mude para o usuário 'node' para rodar os comandos subsequentes
+USER node
+
 # Copy all the application files into the container
 COPY . .
 
