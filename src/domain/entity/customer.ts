@@ -21,6 +21,10 @@ export default class Customer {
     return this._name;
   }
 
+  get address(): Address {
+    return this._address;
+  }
+
   get rewardPoints(): number {
     return this._rewardPoints;
   }
@@ -34,8 +38,13 @@ export default class Customer {
     }
   }
 
-  changename(name: string) {
+  changeName(name: string) {
     this._name = name;
+    this.validate();
+  }
+
+  changeAddress(address: Address) {
+    this._address = address;
     this.validate();
   }
 

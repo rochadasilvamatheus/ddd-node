@@ -3,7 +3,7 @@ import ProductRepositoryInterface from "../../domain/repository/product-reposito
 import ProductModel from "../db/sequelize/model/product.model";
 
 export default class ProductRepository implements ProductRepositoryInterface {
-  async create(entity: Product): Promise<Product> {
+  async create(entity: Product): Promise<void> {
     if (!entity.isValid()) {
       throw new Error("Invalid product data");
     }
@@ -14,12 +14,6 @@ export default class ProductRepository implements ProductRepositoryInterface {
         name: entity.name,
         price: entity.price,
       });
-
-      return new Product(
-        createdProduct.id,
-        createdProduct.name,
-        createdProduct.price
-      );
     } catch (error: unknown) {
       // Log the original error for debugging
       console.error("Error occurred while creating the product:", error);
