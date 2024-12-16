@@ -46,4 +46,35 @@ export default class Order {
   total(): number {
     return this._items.reduce((acc, item) => acc + item.orderItemTotal(), 0);
   }
+
+  addItem(item: OrderItem): void {
+    this._items.push(item);
+    this.adjustTotal(this.total());
+  }
+
+  removeItem(itemId: string): void {
+    const index = this._items.findIndex((item) => item.id === itemId);
+    if (index === -1) {
+      throw new Error("Item not found in the order");
+    }
+    this._items.splice(index, 1);
+    this.adjustTotal(this.total());
+  }
+
+  // Method in Order class to update quantity of an order item
+  updateItemQuantity(itemId: string, newQuantity: number): void {
+    const item = this._items.find((item) => item.id === itemId);
+    if (!item) {
+      throw new Error("Item not found in the order");
+    }
+    item.updateQuantity(newQuantity); // Delegates the quantity update to the OrderItem class
+    this._total = this.total(); // Recalculate the total after the update
+  }
+
+  adjustTotal(newTotal: number): void {
+    if (newTotal < 0) {
+      throw new Error("Total cannot be negative");
+    }
+    this._total = newTotal;
+  }
 }
