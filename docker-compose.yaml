@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
+    user: "node"
     labels:
       jest_runner: "true"
     ports:
