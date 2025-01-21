@@ -1,20 +1,23 @@
+import { Not } from "sequelize-typescript";
+import Entity from "../../@shared/entity/entity.abstract";
 import Address from "../value-object/address";
+import NotificationError from "../../@shared/notification/notification.error";
 
-export default class Customer {
-  private _id: string;
+export default class Customer extends Entity {
   private _name: string;
   private _address!: Address;
   private _active: boolean = false;
   private _rewardPoints: number = 0;
 
   constructor(id: string, name: string) {
+    super();
     this._id = id;
     this._name = name;
     this.validate();
-  }
 
-  get id(): string {
-    return this._id;
+    if (this._notification.hasErrors()) {
+      throw new NotificationError(this._notification.getErrors());
+    }
   }
 
   get name() {
@@ -31,10 +34,16 @@ export default class Customer {
 
   validate() {
     if (this._id.length === 0) {
-      throw new Error("Id is required");
+      this._notification.addError({
+        context: "customer",
+        message: "Id is required",
+      });
     }
     if (this._name.length === 0) {
-      throw new Error("Name is required");
+      this._notification.addError({
+        context: "customer",
+        message: "Name is required",
+      });
     }
   }
 
